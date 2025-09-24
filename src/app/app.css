@@ -1,0 +1,97 @@
+/* Navbar general */
+.navbar {
+  background-color: #1976d2;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Enlaces del navbar */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-links strong {
+  margin-right: 10px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #ffeb3b;
+  text-decoration: underline;
+}
+
+/* Botón de cerrar sesión */
+.logout-button button {
+  background-color: #ef5350;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button button:hover {
+  background-color: #c62828;
+}
+
+/* Campanita con contador */
+.notificacion-wrapper {
+  position: relative;
+}
+
+/* Estilo del badge del contador */
+.badge {
+  font-size: 0.7rem;
+  padding: 3px 6px;
+  border-radius: 50%;
+  position: absolute;
+  top: 0px;
+  right: -5px;
+  transform: translate(50%, -50%);
+  background-color: red;
+  color: white;
+}
+
+/* Panel flotante de notificaciones */
+.notificacion-popup {
+  position: fixed;
+  top: 70px;
+  right: 30px;
+  width: 360px;
+  max-height: 500px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  overflow-y: auto;
+  animation: fadeIn ease 0.3s;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

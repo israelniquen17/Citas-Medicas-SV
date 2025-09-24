@@ -1,0 +1,71 @@
+<div class="reporte-container">
+  <h2>📊 Reporte  de Citas</h2>
+
+  <form (ngSubmit)="generarReporte()" class="formulario-fechas" #formulario="ngForm">
+    <div class="campo">
+      <label for="inicio">📅 Fecha inicio:</label>
+      <input type="date" [(ngModel)]="inicio" name="inicio" required [min]="minFechaInicio">
+    </div>
+
+    <div class="campo">
+      <label for="fin">📅 Fecha fin:</label>
+      <input type="date" [(ngModel)]="fin" name="fin" required [min]="inicio">
+    </div>
+
+    <div class="campo">
+      <label for="dni">🆔 DNI del Paciente (opcional):</label>
+      <input
+        type="text"
+        [(ngModel)]="dni"
+        name="dni"
+        maxlength="8"
+        pattern="^[0-9]{0,8}$"
+        placeholder="Ingrese DNI del Paciente"
+        title="Debe contener hasta 8 dígitos"
+        (keypress)="soloNumeros($event)"
+        #dniInput="ngModel"
+      >
+      <div class="error" *ngIf="dniInput.invalid && dniInput.dirty">
+        El DNI debe contener solo números (hasta 8 dígitos).
+      </div>
+    </div>
+
+    <div class="botones">
+      <button type="submit" class="btn-generar">🔍 Generar</button>
+
+      <button type="button" class="btn-pdf" (click)="descargarPDF()" [disabled]="reporte.length === 0">📥 Descargar PDF</button>
+      <button type="button" class="btn-limpiar" (click)="limpiarFiltros()">🧹 Limpiar</button>
+
+    </div>
+  </form>
+
+<table *ngIf="reporte.length > 0" class="tabla-reporte">
+  <thead>
+    <tr>
+      <th>📅 Fecha</th>
+      <th *ngIf="mostrarUsuario">👤 Paciente</th>
+      <th>👨‍⚕️ Médico</th>
+      <th>🏥 Especialidad</th>
+      <th>📈 Total de Citas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of reporte">
+      <td>{{ item.fecha }}</td>
+      <td *ngIf="mostrarUsuario">{{ item.usuario }}</td>
+      <td>{{ item.medico }}</td>
+      <td>{{ item.especialidad }}</td>
+      <td>{{ item.total }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+  <div *ngIf="reporte.length === 0 && inicio && fin" class="sin-resultados">
+    {{ mensajeSinResultados }}
+  </div>
+  <div *ngIf="mensajeSinResultados" class="sin-resultados">
+  {{ mensajeSinResultados }}
+</div>
+
+</div>

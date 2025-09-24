@@ -1,0 +1,40 @@
+<!-- Contenedores condicionales -->
+<div class="container" *ngIf="router.url !== '/inicio'"></div>
+<div class="container" *ngIf="router.url !== '/login'"></div>
+<div class="container" *ngIf="router.url !== '/admin'"></div>
+
+<!-- NAVBAR: se muestra solo si no estamos en login, admin ni registro -->
+<div class="navbar" *ngIf="router.url !== '/login' && router.url !== '/admin' && router.url !== '/registro'">
+  <div class="nav-links">
+    <strong>Módulos:</strong>
+    <a routerLink="/inicio">Agendar Cita</a>
+    <a routerLink="/nuevacontraseña">Cambiar Contraseña</a>
+    <a routerLink="/MisCitas">Mis Citas</a>
+
+    <!-- Botón de campanita con contador -->
+    <div class="notificacion-wrapper ms-3 position-relative">
+      <button class="btn btn-light p-0 border-0 bg-transparent" (click)="toggleNotificaciones()">
+        <!-- Puedes reemplazar este ícono por una imagen PNG si lo deseas -->
+        <i class="bi bi-bell-fill fs-5 text-white"></i>
+        <span *ngIf="notificacionesPendientes > 0"
+              class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">
+          {{ notificacionesPendientes }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Botón de cerrar sesión -->
+  <div class="logout-button">
+    <button (click)="cerrarSesion()">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- Panel flotante de notificaciones -->
+<div *ngIf="mostrarNotificaciones && router.url !== '/login' && router.url !== '/admin' && router.url !== '/registro'" class="notificacion-popup">
+  <app-notificaciones-citas></app-notificaciones-citas>
+</div>
+
+
+<!-- Contenedor para la vista principal -->
+<router-outlet></router-outlet>

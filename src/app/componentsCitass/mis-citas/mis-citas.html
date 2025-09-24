@@ -1,0 +1,134 @@
+<div class="container mt-4">
+  <h4 class="mb-3">Mis Citas</h4>
+
+  <div *ngIf="mensajeError" class="alert alert-danger">
+    {{ mensajeError }}
+  </div>
+
+  <table class="table table-striped" *ngIf="citasUsuario.length > 0">
+    <thead class="table-primary">
+      <tr>
+        <th>Fecha</th>
+        <th>Turno</th>
+        <th>Horario</th>
+        <th>Estado</th>
+        <th>Médico</th>
+        <th>Especialidad</th>
+        <th>Sede</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cita of citasUsuario">
+        <td>{{ cita.fecha }}</td>
+        <td>{{ cita.turno }}</td>
+        <td>{{ cita.horario }}</td>
+        <td>
+          <span
+            class="badge d-flex align-items-center gap-1"
+            [ngClass]="{
+              'bg-success': cita.estado === 'proxima',
+              'bg-warning text-dark': cita.estado === 'reprogramada',
+              'bg-danger': cita.estado === 'cancelada',
+              'bg-secondary': cita.estado === 'finalizada'
+            }"
+          >
+            <i
+              [ngClass]="{
+                'bi bi-calendar-check-fill': cita.estado === 'proxima',
+                'bi bi-arrow-repeat': cita.estado === 'reprogramada',
+                'bi bi-x-circle-fill': cita.estado === 'cancelada',
+                'bi bi-check-circle': cita.estado === 'finalizada'
+              }"
+            ></i>
+            {{ cita.estado }}
+          </span>
+        </td>
+        <td>{{ cita.nombreMedico }}</td>
+        <td>{{ cita.especialidad }}</td>
+        <td>{{ cita.sede }}</td>
+        <td>
+          <button 
+            (click)="cancelarCita(cita.id, cita.especialidad)" 
+            [disabled]="cita.estado !== 'proxima'" 
+            class="btn btn-danger btn-sm">
+            Cancelar
+          </button>
+
+          <button 
+            (click)="mostrarFormularioReprogramar(cita)" 
+            [disabled]="cita.estado !== 'proxima'" 
+            class="btn btn-warning btn-sm ms-1">
+            Reprogramar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="citasUsuario.length === 0 && !mensajeError" class="text-center text-muted mt-3">
+    No se encontraron citas registradas.
+  </div>
+</div>
+
+<!-- Formulario Reprogramar -->
+<div *ngIf="mostrarReprogramar" class="card mt-5 p-4 bg-light rounded-4 shadow-sm border" style="max-width: 700px; margin: auto;">
+  <h4 class="mb-4 text-primary fw-bold text-center">
+    <i class="bi bi-arrow-repeat"></i> Reprogramar Cita
+  </h4>
+
+  <!-- Info de cita -->
+  <div class="mb-3"><strong>Paciente:</strong> {{ citaSeleccionada?.nombrePaciente }}</div>
+  <div class="mb-3"><strong>Especialidad:</strong> {{ citaSeleccionada?.especialidad }}</div>
+  <div class="mb-3"><strong>Médico:</strong> {{ citaSeleccionada?.nombreMedico }}</div>
+  <div class="mb-3"><strong>Sede:</strong> {{ citaSeleccionada?.sede }}</div>
+  <div class="mb-3">
+    <strong>Fecha actual:</strong> {{ citaSeleccionada?.fecha }}<br />
+    <strong>Horario:</strong> {{ citaSeleccionada?.horario }}
+  </div>
+
+  <!-- Nueva fecha -->
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Nueva Fecha:</label>
+    <input type="date" 
+           class="form-control" 
+           [(ngModel)]="nuevaFecha" 
+           (change)="onFechaSeleccionada()"
+           [min]="hoy"
+           [max]="fechaMaxima" />
+  </div>
+
+  <!-- Turno -->
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Turno:</label>
+    <input type="text" class="form-control" [value]="turnoSeleccionado" readonly />
+  </div>
+
+  <!-- Horarios disponibles -->
+  <div *ngIf="horariosDisponibles.length > 0" class="mb-3">
+    <label class="form-label fw-semibold">Horarios disponibles:</label>
+    <div class="d-flex flex-wrap gap-2">
+      <button
+        *ngFor="let h of horariosDisponibles"
+        type="button"
+        class="btn"
+        [class.btn-outline-primary]="horarioSeleccionado !== h && !horariosOcupados.includes(h)"
+        [class.btn-primary]="horarioSeleccionado === h"
+        [class.btn-secondary]="horariosOcupados.includes(h)"
+        [disabled]="horariosOcupados.includes(h)"
+        (click)="seleccionarHorario(h)">
+        {{ h }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Botones -->
+  <div class="text-center mt-4">
+    <button class="btn btn-success me-2"
+            (click)="confirmarReprogramacion()"
+            [disabled]="!nuevaFecha || !horarioSeleccionado">
+      Confirmar
+    </button>
+    <button class="btn btn-secondary" (click)="cancelarReprogramacion()">Cancelar</button>
+  </div>
+</div>

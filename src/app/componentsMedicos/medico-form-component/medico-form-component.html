@@ -1,0 +1,176 @@
+<div *ngIf="medicoEditar" class="card my-4">
+  <div class="card-header text-center">
+    <h4>{{ medicoEditar.id ? 'Actualizar Médico' : 'Nuevo Médico' }}</h4>
+  </div>
+  <div class="card-body">
+    <form #formMedico="ngForm" (ngSubmit)="guardar()" novalidate>
+      <!-- Botón para cerrar el formulario -->
+<div class="text-end mb-3">
+  <button class="btn btn-outline-secondary" (click)="cerrarFormulario()">
+    <i class="bi bi-x-lg"></i> Cerrar formulario
+  </button>
+</div>
+
+      <!-- DNI -->
+      <div class="row mb-3">
+        <div class="col-md-6 mb-3">
+          <label for="dni">DNI: (Obligatoria)</label>
+          <input type="text" id="dni" class="form-control" name="dni"
+            [(ngModel)]="medicoEditar.dni" required maxlength="8"
+            pattern="^[0-9]{8}$" (keypress)="soloNumeros($event)" (blur)="verificarDni()"
+            #dni="ngModel" [readonly]="medicoEditar?.id ? true : false" />
+          <div class="text-danger" *ngIf="dni.invalid && dni.touched">
+            <small *ngIf="dni.errors?.['required']">El DNI es obligatorio.</small>
+            <small *ngIf="dni.errors?.['pattern']">Debe tener 8 dígitos numéricos.</small>
+          </div>
+          <div class="text-danger" *ngIf="dniDuplicado && !medicoEditar?.id">
+            <small>Este DNI ya está registrado.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nombres / Apellidos -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="nombres">Nombres (Obligatoria)</label>
+          <input type="text" id="nombres" class="form-control" name="nombres"
+            [(ngModel)]="medicoEditar.nombres" required
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$" (keypress)="soloLetras($event)" #nombres="ngModel">
+          <div class="text-danger" *ngIf="nombres.invalid && nombres.touched">
+            <small *ngIf="nombres.errors?.['required']">El nombre es obligatorio.</small>
+            <small *ngIf="nombres.errors?.['pattern']">Solo letras y espacios.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="apellidos">Apellidos (Obligatoria)</label>
+          <input type="text" id="apellidos" class="form-control" name="apellidos"
+            [(ngModel)]="medicoEditar.apellidos" required
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$" (keypress)="soloLetras($event)" #apellidos="ngModel">
+          <div class="text-danger" *ngIf="apellidos.invalid && apellidos.touched">
+            <small *ngIf="apellidos.errors?.['required']">El apellido es obligatorio.</small>
+            <small *ngIf="apellidos.errors?.['pattern']">Solo letras y espacios.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Correo / Celular -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="correo">Correo Electrónico (Obligatoria)</label>
+          <input type="email" id="correo" class="form-control" name="correo"
+            [(ngModel)]="medicoEditar.correoElectronico" required email (blur)="correo.valid && verificarCorreo()"
+            #correo="ngModel">
+          <div class="text-danger" *ngIf="correo.invalid && correo.touched">
+            <small *ngIf="correo.errors?.['required']">El correo es obligatorio.</small>
+            <small *ngIf="correo.errors?.['email']">El formato del correo no es válido.</small>
+          </div>
+          <div class="text-danger" *ngIf="correo.valid && correoDuplicado">
+            <small>Este correo ya está registrado.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="celular">Celular (Obligatoria)</label>
+          <input type="text" id="celular" class="form-control" name="celular"
+            [(ngModel)]="medicoEditar.numeroCelular" required pattern="^9[0-9]{8}$"
+            maxlength="9" (keypress)="soloNumeros($event)" (blur)="verificarCelular()"
+            #celular="ngModel">
+          <div class="text-danger" *ngIf="celular.invalid && celular.touched">
+            <small *ngIf="celular.errors?.['required']">El número es obligatorio.</small>
+            <small *ngIf="celular.errors?.['pattern']">Debe iniciar con 9 y tener 9 dígitos.</small>
+          </div>
+          <div class="text-danger" *ngIf="celularDuplicado">
+            <small>Este número ya está registrado.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fecha Nacimiento / Sexo -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="fechaNacimiento">Fecha de Nacimiento (Obligatoria)</label>
+          <input type="date" id="fechaNacimiento" class="form-control" name="fechaNacimiento"
+            [(ngModel)]="medicoEditar.fechaNacimiento" required (blur)="validarEdadMedico()"
+            #fechaNacimiento="ngModel">
+          <div class="text-danger" *ngIf="fechaNacimiento.invalid && fechaNacimiento.touched">
+            <small *ngIf="fechaNacimiento.errors?.['required']">La fecha es obligatoria.</small>
+          </div>
+          <div class="text-danger" *ngIf="fechaNacimientoInvalida">
+            <small>Debe tener entre 18 y 80 años.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="sexo">Sexo (Obligatoria)</label>
+          <select id="sexo" class="form-control" name="sexo" required
+            [(ngModel)]="medicoEditar.sexo" #sexo="ngModel">
+            <option value="" disabled>Seleccione una opción</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+          </select>
+          <div class="text-danger" *ngIf="sexo.invalid && sexo.touched">
+            <small>Debe seleccionar una opción.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Turnos / Especialidad / Sede -->
+      <div class="row mb-3">
+        <!-- Turnos con checkboxes -->
+        <div class="col-md-4">
+          <label class="form-label">Turno(s) de Atención (Obligatoria)</label>
+          <div class="form-check" *ngFor="let turno of turnosDisponibles">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [value]="turno"
+              [checked]="medicoEditar.horariosAtencion.includes(turno)"
+              (change)="toggleTurno(turno)"
+              [id]="turno" />
+            <label class="form-check-label" [for]="turno">{{ turno }}</label>
+          </div>
+          <div class="text-danger" *ngIf="medicoEditar.horariosAtencion.length === 0 && formMedico.submitted">
+            <small>Debe seleccionar al menos un turno.</small>
+          </div>
+        </div>
+
+        <!-- Especialidad -->
+        <div class="col-md-4">
+          <label for="especialidad">Especialidad (Obligatoria)</label>
+          <select id="especialidad" class="form-control" name="especialidad"
+            [(ngModel)]="medicoEditar.especialidad" required #especialidad="ngModel">
+            <option value="" disabled>Seleccione una especialidad</option>
+            <option *ngFor="let esp of especialidades" [ngValue]="esp">{{ esp.nombre }}</option>
+          </select>
+          <div class="text-danger" *ngIf="especialidad.invalid && especialidad.touched">
+            <small>Seleccione una especialidad.</small>
+          </div>
+        </div>
+
+        <!-- Sede -->
+        <div class="col-md-4">
+          <label for="sede">Sede (Obligatoria)</label>
+          <select [(ngModel)]="medicoEditar.sede" name="sede" class="form-control" required #sede="ngModel">
+            <option value="" disabled>Seleccione una sede</option>
+            <option *ngFor="let sede of sedes" [ngValue]="sede">{{ sede.nombre }}</option>
+          </select>
+          <div class="text-danger" *ngIf="sede.invalid && sede.touched">
+            <small>Seleccione una sede.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón Guardar -->
+      <div class="row">
+        <div class="col-12 text-center">
+          <button type="submit" class="btn btn-success"
+            [disabled]="formMedico.invalid || correoDuplicado || celularDuplicado || fechaNacimientoInvalida">
+            {{ medicoEditar.id ? 'Actualizar Médico' : 'Registrar Médico' }}
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

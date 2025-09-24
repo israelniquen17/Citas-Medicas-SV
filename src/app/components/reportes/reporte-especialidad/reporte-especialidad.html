@@ -1,0 +1,43 @@
+<div class="container mt-4 p-4 shadow rounded bg-white border">
+  <h3 class="mb-4 text-primary">
+    <i class="bi bi-bar-chart-fill me-2"></i>Reporte por Especialidad
+  </h3>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label for="fechaInicio" class="form-label">📅 Fecha Inicio:</label>
+      <input id="fechaInicio" type="date" [(ngModel)]="fechaInicio" class="form-control" min="2025-06-01" />
+    </div>
+    <div class="col-md-4">
+      <label for="fechaFin" class="form-label">📅 Fecha Fin:</label>
+      <input id="fechaFin" type="date" [(ngModel)]="fechaFin" class="form-control" />
+    </div>
+    <div class="col-md-4 d-flex align-items-end justify-content-start gap-2">
+      <button class="btn btn-primary" (click)="generarReporte()">
+        <i class="bi bi-graph-up-arrow me-1"></i>Generar
+      </button>
+      <button class="btn btn-secondary" (click)="limpiar()">
+        <i class="bi bi-arrow-clockwise me-1"></i>Limpiar
+      </button>
+      <button class="btn btn-success" (click)="exportarPDF()">
+        <i class="bi bi-file-earmark-pdf-fill me-1"></i>Exportar PDF
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="mensaje" class="alert alert-warning d-flex align-items-center" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    {{ mensaje }}
+  </div>
+
+  <div *ngIf="barChartData.datasets.length > 0" id="grafico-especialidades">
+    <p class="text-muted">
+      Mostrando datos desde <strong>{{ fechaInicio }}</strong> hasta <strong>{{ fechaFin }}</strong>
+    </p>
+    <canvas baseChart
+      [data]="barChartData"
+      [options]="barChartOptions"
+      [type]="'bar'">
+    </canvas>
+  </div>
+</div>

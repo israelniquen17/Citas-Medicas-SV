@@ -1,0 +1,108 @@
+<div class="container mt-5 p-4 bg-light rounded-4 shadow-sm border" style="max-width: 700px;">
+  <h3 class="mb-4 text-center text-primary fw-bold">
+    <i class="bi bi-calendar-check"></i> Agendar por Sede
+  </h3>
+
+  <!-- Combo de Sedes -->
+  <div class="mb-4">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-hospital"></i> Seleccione la Sede:
+    </label>
+    <select class="form-select"
+            [(ngModel)]="sedeSeleccionada"
+            (change)="onSedeSeleccionada()"
+            name="sede"
+            required>
+      <option value="" disabled selected>-- Seleccione una sede --</option>
+      <option *ngFor="let sede of sedes" [ngValue]="sede">{{ sede.nombre }}</option>
+    </select>
+  </div>
+
+  <!-- Combo de Médicos -->
+  <div class="mb-4" *ngIf="medicos.length > 0">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-person-badge"></i> Seleccione el Médico:
+    </label>
+    <select class="form-select"
+            [(ngModel)]="medicoSeleccionado"
+            (change)="onMedicoSeleccionado()"
+            name="medico"
+            required>
+      <option value="" disabled selected>-- Seleccione un médico --</option>
+      <option *ngFor="let medico of medicos" [ngValue]="medico">
+        {{ medico.nombres }} {{ medico.apellidos }} ({{ medico.especialidad?.nombre }})
+      </option>
+    </select>
+  </div>
+
+  <!-- Fecha -->
+  <div class="mb-4">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-calendar-event"></i> Seleccione una Fecha:
+    </label>
+    <input type="date" class="form-control"
+           [(ngModel)]="fechaSeleccionada"
+           [min]="hoy"
+           [max]="fechaMaxima"
+           (change)="onFechaSeleccionada()" required>
+  </div>
+
+<!-- Turno -->
+<div class="mb-4">
+  <label for="turno" class="form-label fw-semibold">
+    <i class="bi bi-clock"></i> Seleccione el Turno:
+  </label>
+  <select id="turno" class="form-select" [(ngModel)]="turnoSeleccionado" name="turno"
+          [disabled]="!medicoSeleccionado || !fechaSeleccionada" (change)="onTurnoSeleccionado()">
+    <option [ngValue]="''">-- Seleccione un turno --</option>
+    <option *ngFor="let turno of turnosDelMedico" [value]="turno">{{ turno }}</option>
+  </select>
+</div>
+
+  <!-- Horarios -->
+  <div *ngIf="horariosDisponibles.length > 0" class="mb-4">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-clock-history"></i> Horarios disponibles:
+    </label>
+    <div class="d-flex flex-wrap gap-2 mt-2">
+      <button *ngFor="let horario of horariosDisponibles"
+              class="btn"
+              [ngClass]="{
+                'btn-outline-primary': horario !== horarioSeleccionado && !horariosOcupados.includes(horario),
+                'btn-primary': horario === horarioSeleccionado,
+                'btn-secondary': horariosOcupados.includes(horario)
+              }"
+              [disabled]="horariosOcupados.includes(horario)"
+              (click)="seleccionarHorario(horario)">
+        {{ horario }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Resumen -->
+  <div class="mb-4">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-info-circle"></i> Resumen de Selección:
+    </label>
+    <textarea class="form-control bg-light" rows="4" readonly>{{ resumen }}</textarea>
+  </div>
+
+  <!-- Mensaje de éxito -->
+  <div *ngIf="mensajeExito" class="alert alert-success text-center fw-semibold">
+    <i class="bi bi-check-circle-fill me-2"></i> Cita registrada correctamente.
+  </div>
+
+  <!-- Botón Confirmar -->
+  <div class="text-center">
+    <button class="btn btn-success px-4 py-2"
+            [disabled]="botonDeshabilitado"
+            (click)="validarYConfirmar()">
+      <ng-container *ngIf="botonDeshabilitado; else textoBoton">
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Validando...
+      </ng-container>
+      <ng-template #textoBoton>
+        <i class="bi bi-check-circle me-2"></i> Confirmar Cita
+      </ng-template>
+    </button>
+  </div>
+</div>

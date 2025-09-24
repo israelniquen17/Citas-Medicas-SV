@@ -1,0 +1,85 @@
+<div class="card my-4">
+  <div class="card-header text-center">
+    <h4>Buscar Citas por Usuario</h4>
+  </div>
+  <div class="card-body">
+
+    <!-- Filtro por estado -->
+    <div class="mb-3 text-center">
+      <label class="form-label me-2"><strong>Filtrar por estado:</strong></label>
+      <select class="form-select d-inline-block w-auto" [(ngModel)]="estadoBuscar">
+        <option value="">Todos</option>
+        <option value="proxima">Próxima</option>
+        <option value="reprogramada">Reprogramada</option>
+        <option value="cancelada">Cancelada</option>
+        <option value="finalizada">Finalizada</option>
+      </select>
+    </div>
+
+    <!-- Búsqueda -->
+    <div class="mb-3 text-center d-flex justify-content-center flex-wrap gap-2">
+      <input class="form-control w-auto"
+             [(ngModel)]="criterioBuscar"
+             placeholder="Ingrese DNI del Paciente"
+             maxlength="8"
+             (keypress)="soloNumeros($event)"
+             [ngClass]="{ 'is-invalid': mensaje }"
+      />
+      <button class="btn btn-dark" (click)="buscar()">Buscar</button>
+      <button class="btn btn-outline-secondary" (click)="restablecer()">Restablecer</button>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="mensaje" class="alert alert-warning text-center mt-3">
+      {{ mensaje }}
+    </div>
+
+    <!-- Tabla de resultados -->
+    <table *ngIf="citas.length > 0" class="table table-bordered table-hover mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>Paciente</th>
+          <th>DNI</th>
+          <th>Fecha</th>
+          <th>Turno</th>
+          <th>Horario</th>
+          <th>Estado</th>
+          <th>Médico</th>
+          <th>Especialidad</th>
+          <th>Sede</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of citas">
+          <td>{{ c.nombrePaciente }}</td>
+          <td>{{ c.dni }}</td>
+          <td>{{ c.fecha }}</td>
+          <td>{{ c.turno }}</td>
+          <td>{{ c.horario }}</td>
+          <td>
+            <span class="badge d-flex align-items-center gap-1"
+              [ngClass]="{
+                'bg-success': c.estado === 'proxima',
+                'bg-warning text-dark': c.estado === 'reprogramada',
+                'bg-danger': c.estado === 'cancelada',
+                'bg-secondary': c.estado === 'finalizada'
+              }">
+              <i
+                [ngClass]="{
+                  'bi bi-calendar-check-fill': c.estado === 'proxima',
+                  'bi bi-arrow-repeat': c.estado === 'reprogramada',
+                  'bi bi-x-circle-fill': c.estado === 'cancelada',
+                  'bi bi-check-circle': c.estado === 'finalizada'
+                }"
+              ></i>
+              {{ c.estado }}
+            </span>
+          </td>
+          <td>{{ c.nombreMedico }}</td>
+          <td>{{ c.especialidad }}</td>
+          <td>{{ c.sede }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

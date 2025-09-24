@@ -1,0 +1,71 @@
+<div class="card my-4">
+  <div class="card-header text-center">
+    <h4>Administrar Especialidades</h4>
+  </div>
+  <div class="card-body">
+
+    <!-- Mensajes -->
+    <div *ngIf="mensajeExito" class="alert alert-success text-center">{{ mensajeExito }}</div>
+    <div *ngIf="mensajeError" class="alert alert-danger text-center">{{ mensajeError }}</div>
+
+    <!-- Agregar especialidad -->
+    <div class="row mb-4">
+      <div class="col-md-8 offset-md-2">
+        <label for="seleccionEspecialidad" class="form-label">Agregar nueva especialidad:</label>
+        <div class="input-group">
+          <select class="form-select" [(ngModel)]="seleccionada" id="seleccionEspecialidad">
+            <option [ngValue]="null">Seleccione una especialidad</option>
+            <option *ngFor="let esp of especialidadesDisponibles" [ngValue]="esp">{{ esp }}</option>
+          </select>
+          <button class="btn btn-success" (click)="guardar()" [disabled]="!seleccionada">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtro por estado -->
+    <div class="mb-3 text-center">
+      <label class="form-label me-2"><strong>Filtrar por estado:</strong></label>
+      <select class="form-select d-inline-block w-auto" [(ngModel)]="filtroEstado" (change)="aplicarFiltro()">
+        <option value="todas">Todas</option>
+        <option value="activos">Activas</option>
+        <option value="inactivos">Inactivas</option>
+      </select>
+      <button class="btn btn-outline-secondary ms-2" (click)="restablecer()">Restablecer</button>
+    </div>
+
+    <!-- Tabla de especialidades -->
+    <table class="table table-bordered table-hover mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let esp of especialidadesFiltradas" [ngClass]="{ 'table-secondary': !esp.activo }">
+          <td>{{ esp.id }}</td>
+          <td>{{ esp.nombre }}</td>
+          <td>
+            <span class="badge" [ngClass]="esp.activo ? 'bg-success' : 'bg-secondary'">
+              {{ esp.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>
+            <ng-container *ngIf="esp.activo; else inactivo">
+              <button class="btn btn-danger btn-sm" (click)="darDeBaja(esp)">Dar de baja</button>
+            </ng-container>
+            <ng-template #inactivo>
+              <button class="btn btn-secondary btn-sm" (click)="darDeAlta(esp)">Dar de alta</button>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="especialidadesFiltradas.length === 0" class="alert alert-warning text-center">
+      No se encontraron especialidades.
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="container login-container d-flex shadow rounded overflow-hidden">
+  
+  <div class="col-md-6 d-none d-md-block p-0">
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="false">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="https://i.ibb.co/C5MJwNLM/Imagen2.png" class="d-block w-100" alt="..." style="height: 53rem;">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.clinicaprovidencia.pe/wp-content/uploads/2022/05/6364.png" class="d-block w-100" alt="..." style="height: 53rem;">
+        </div>
+        <div class="carousel-item">
+          <img src="https://escanografia.com/wp-content/uploads/2022/11/Fotos-Consulta-Medica-2022-33.jpg" class="d-block w-100" alt="..." style="height: 53rem;">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-6 bg-white p-5">
+    <div class="text-center mb-4">
+      <img src="https://i.ibb.co/SDMBYTHc/clinica-Servital.jpg" alt="Imagen" class="LogoClinica">
+      <h4 class="Text-IniciarSesion mt-3">Iniciar Sesión</h4>
+    </div>
+
+    <form (ngSubmit)="login()" #formLogin="ngForm">
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" name="correo" [(ngModel)]="usuario.correoElectronico" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-control" name="contrasena" [(ngModel)]="usuario.contrasena" required>
+      </div>
+      <div class="text-center">
+        <button class="btn btn-primary" type="submit" [disabled]="formLogin.invalid">Ingresar</button>
+      </div>
+
+      <div class="text-center my-3">
+        <a [routerLink]="['/registro']" class="btn btn-link">¿No tienes cuenta? Regístrate ahora</a>
+      </div>
+    </form>
+  </div>
+
+</div>

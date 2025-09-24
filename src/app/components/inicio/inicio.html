@@ -1,0 +1,20 @@
+<div class="form-container text-center p-5 rounded shadow bg-light">
+  <h2 class="mb-3 text-primary">Agendar Cita Médica</h2>
+  <p class="mb-4 fs-5">Seleccione cómo desea agendar su cita:</p>
+
+  <div class="d-flex justify-content-center gap-4 flex-wrap">
+    <button class="btn btn-outline-primary btn-lg d-flex align-items-center gap-2"
+            (click)="irAgendarPorMedico()">
+      <i class="bi bi-person-vcard-fill fs-4"></i>
+      Por Sede
+    </button>
+
+    <button class="btn btn-outline-success btn-lg d-flex align-items-center gap-2"
+            (click)="irAgendarPorEspecialidad()">
+      <i class="bi bi-heart-pulse-fill fs-4"></i>
+      Por Especialidad
+    </button>
+
+
+  </div>
+</div>

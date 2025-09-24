@@ -1,0 +1,51 @@
+<div class="form-container">
+  <h2>Cambiar Contraseña</h2>
+
+  <form (ngSubmit)="cambiarContrasena()" #formPass="ngForm" class="formulario-contrasena">
+    
+    <!-- Contraseña Actual -->
+    <div class="form-group">
+      <label for="actual">Contraseña Actual: (Obligatoria)</label>
+      <input type="password" id="actual" name="actual" class="form-control"
+             [(ngModel)]="actual" required #actualRef="ngModel">
+      <div class="text-danger" *ngIf="actualRef.invalid && actualRef.touched">
+        <small>La contraseña actual es obligatoria.</small>
+      </div>
+    </div>
+
+    <!-- Nueva Contraseña -->
+    <div class="form-group">
+      <label for="nueva">Nueva Contraseña: (Obligatoria)</label>
+      <input type="password" id="nueva" name="nueva" class="form-control"
+             [(ngModel)]="nueva"
+             required
+             pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$"
+             #nuevaRef="ngModel">
+      <div class="text-danger" *ngIf="nuevaRef.invalid && nuevaRef.touched">
+        <small *ngIf="nuevaRef.errors?.['required']">La nueva contraseña es obligatoria.</small>
+        <small *ngIf="nuevaRef.errors?.['pattern']">
+          Mínimo 8 caracteres, una mayúscula, un número y un símbolo.
+        </small>
+      </div>
+    </div>
+
+    <!-- Confirmar Contraseña -->
+    <div class="form-group">
+      <label for="confirmar">Confirmar Nueva Contraseña: (Obligatoria) </label>
+      <input type="password" id="confirmar" name="confirmar" class="form-control"
+             [(ngModel)]="confirmar" required #confirmarRef="ngModel">
+      <div class="text-danger" *ngIf="confirmarRef.invalid && confirmarRef.touched">
+        <small>La confirmación es obligatoria.</small>
+      </div>
+      <div class="text-danger" *ngIf="nueva !== confirmar && confirmarRef.touched">
+        <small>Las contraseñas no coinciden.</small>
+      </div>
+    </div>
+
+    <!-- Botón -->
+    <button type="submit" class="btn-submit"
+            [disabled]="formPass.invalid || nueva !== confirmar">
+      Cambiar Contraseña
+    </button>
+  </form>
+</div>

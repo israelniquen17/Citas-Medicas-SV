@@ -1,0 +1,67 @@
+<!-- Botón de nuevo médico -->
+<button class="btn btn-primary my-3" (click)="crearNuevo()">Nuevo Médico</button>
+
+<!-- 🟢 Mensajes de éxito y error -->
+<div *ngIf="mensajeExito" class="alert alert-success text-center">
+  {{ mensajeExito }}
+</div>
+<div *ngIf="mensajeError" class="alert alert-danger text-center">
+  {{ mensajeError }}
+</div>
+
+<!-- ✅ Formulario médico (ahora está antes que la tabla) -->
+<app-medico-form-component
+  *ngIf="medicoEnEdicion"
+  [medicoEditar]="medicoEnEdicion"
+  (medicoActualiza)="guardarMedico()"
+  (cerrarFormularioEvent)="cerrarFormulario()">
+</app-medico-form-component>
+
+<!-- Filtros -->
+<div class="row mb-3">
+  <div class="col">
+    <input
+      class="form-control"
+      placeholder="Filtrar por DNI"
+      [(ngModel)]="filtroDni"
+      (ngModelChange)="buscarPorDni()"
+      maxlength="8"
+      (keypress)="soloNumeros($event)"
+    />
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="filtroEspecialidadSeleccionada" (change)="buscarPorEspecialidad()">
+      <option value="">Todas las especialidades</option>
+      <option *ngFor="let esp of especialidades" [value]="esp.nombre">{{ esp.nombre }}</option>
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="filtroEstado" (change)="filtrarPorEstado(filtroEstado)">
+      <option value="todos">Todos</option>
+      <option value="activos">Activos</option>
+      <option value="inactivos">Inactivos</option>
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="filtroTurno" (change)="aplicarFiltros()">
+      <option value="">Todos los turnos</option>
+      <option value="Mañana">Mañana</option>
+      <option value="Tarde">Tarde</option>
+      <option value="Noche">Noche</option>
+    </select>
+  </div>
+</div>
+
+<!-- Botón de restablecer filtros -->
+<div class="text-end mb-3">
+  <button class="btn btn-secondary" (click)="restablecerLista()">
+    <i class="bi bi-arrow-counterclockwise me-1"></i> Restablecer Filtros
+  </button>
+</div>
+
+<!-- Tabla de médicos -->
+<app-tabla-medicos-component
+  [listaMedicos]="medicosFiltrados"
+  (editar)="prepararEdicion($event)"
+  (cambiarEstado)="cambiarEstadoMedico($event)">
+</app-tabla-medicos-component>

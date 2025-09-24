@@ -1,0 +1,12 @@
+.container {
+  background-color: #fdfdfd;
+  border-radius: 12px;
+}
+
+h3 {
+  font-weight: bold;    
+}
+
+button i {
+  vertical-align: middle;
+}

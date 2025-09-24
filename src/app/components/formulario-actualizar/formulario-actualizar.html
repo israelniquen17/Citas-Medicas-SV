@@ -1,0 +1,213 @@
+<div *ngIf="usuarioEditar" class="card my-4 shadow">
+  <div class="card-header text-center bg-primary text-white">
+    <h4>Actualizar Usuario</h4>
+  </div>
+
+  <div class="card-body">
+    <form #formUsuario="ngForm" (ngSubmit)="actualizarUsuario()" novalidate>
+      
+      <!-- DNI -->
+      <div class="row mb-3">
+        <div class="col-md-6 mx-auto">
+          <label for="dni"><strong>DNI (Obligatoria)</strong></label>
+          <input
+            type="text"
+            id="dni"
+            class="form-control"
+            name="dni"
+            [(ngModel)]="usuario.dni"
+            required
+            pattern="^[0-9]{8}$"
+            maxlength="8"
+            (keypress)="soloNumeros($event)"
+            #dni="ngModel"
+            readonly
+          />
+          <div class="text-danger" *ngIf="dni.invalid && dni.touched">
+            <small *ngIf="dni.errors?.['required']">El DNI es obligatorio.</small>
+            <small *ngIf="dni.errors?.['pattern']">Debe tener 8 dígitos numéricos.</small>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- Nombres y Apellidos -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="nombres"><strong>Nombres (Obligatoria)</strong></label>
+          <input
+            type="text"
+            id="nombres"
+            class="form-control"
+            name="nombres"
+            [(ngModel)]="usuario.nombres"
+            required
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+            (keypress)="soloLetras($event)"
+            #nombres="ngModel"
+          />
+          <div class="text-danger" *ngIf="nombres.invalid && nombres.touched">
+            <small *ngIf="nombres.errors?.['required']">El nombre es obligatorio.</small>
+            <small *ngIf="nombres.errors?.['pattern']">Solo letras y espacios.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="apellidos"><strong>Apellidos (Obligatoria)</strong></label>
+          <input
+            type="text"
+            id="apellidos"
+            class="form-control"
+            name="apellidos"
+            [(ngModel)]="usuario.apellidos"
+            required
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+            (keypress)="soloLetras($event)"
+            #apellidos="ngModel"
+          />
+          <div class="text-danger" *ngIf="apellidos.invalid && apellidos.touched">
+            <small *ngIf="apellidos.errors?.['required']">El apellido es obligatorio.</small>
+            <small *ngIf="apellidos.errors?.['pattern']">Solo letras y espacios.</small>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- Correo y Celular -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="correoElectronico"><strong>Correo Electrónico (Obligatoria)</strong></label>
+          <input
+            type="email"
+            id="correoElectronico"
+            class="form-control"
+            name="correoElectronico"
+            [(ngModel)]="usuario.correoElectronico"
+            required
+            email
+            (blur)="correo.valid && verificarCorreo()"
+            #correo="ngModel"
+          />
+          <div class="text-danger" *ngIf="correo.invalid && correo.touched">
+            <small *ngIf="correo.errors?.['required']">El correo es obligatorio.</small>
+            <small *ngIf="correo.errors?.['email']">El formato del correo no es válido.</small>
+          </div>
+          <div class="text-danger" *ngIf="correo.valid && correoDuplicado">
+            <small>Este correo ya está en uso.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="numeroCelular"><strong>Celular (Obligatoria)</strong></label>
+          <input
+            type="tel"
+            id="numeroCelular"
+            class="form-control"
+            name="numeroCelular"
+            [(ngModel)]="usuario.numeroCelular"
+            required
+            pattern="^9[0-9]{8}$"
+            maxlength="9"
+            (keypress)="soloNumeros($event)"
+            (blur)="verificarCelular()"
+            #numero="ngModel"
+          />
+          <div class="text-danger" *ngIf="numero.invalid && numero.touched">
+            <small *ngIf="numero.errors?.['required']">El número es obligatorio.</small>
+            <small *ngIf="numero.errors?.['pattern']">Debe empezar con 9 y tener 9 dígitos.</small>
+          </div>
+          <div class="text-danger" *ngIf="celularDuplicado">
+            <small>Este número de celular ya está en uso.</small>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- Fecha de nacimiento y Sexo -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="fechaNacimiento"><strong>Fecha de Nacimiento (Obligatoria)</strong></label>
+          <input
+            type="date"
+            id="fechaNacimiento"
+            class="form-control"
+            name="fechaNacimiento"
+            [(ngModel)]="usuario.fechaNacimiento"
+            required
+            (blur)="validarEdad()"
+            #fechaNacimiento="ngModel"
+          />
+          <div class="text-danger" *ngIf="fechaNacimiento.invalid && fechaNacimiento.touched">
+            <small>La fecha es obligatoria.</small>
+          </div>
+          <div class="text-danger" *ngIf="fechaNacimientoInvalida">
+            <small>Debe tener entre 18 y 80 años.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="sexo"><strong>Sexo (Obligatoria)</strong></label>
+          <select
+            id="sexo"
+            class="form-control"
+            name="sexo"
+            [(ngModel)]="usuario.sexo"
+            required
+            #sexo="ngModel"
+          >
+            <option value="" disabled>Seleccione una opción </option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <div class="text-danger" *ngIf="sexo.invalid && sexo.touched">
+            <small>Debe seleccionar una opción.</small>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- Tipo de Usuario -->
+      <div class="row mb-3">
+        <div class="col-md-6 mx-auto">
+          <label for="tipoUsuario"><strong>Tipo de Usuario (Obligatoria)</strong></label>
+          <select
+            id="tipoUsuario"
+            class="form-control"
+            name="tipoUsuario"
+            [(ngModel)]="usuario.tipoUsuario"
+            required
+            #tipoUsuario="ngModel"
+            [attr.disabled]="usuario?.dni ? true : null"
+          >
+            <option value="" disabled>Seleccione un tipo (Obligatoria)</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Cliente">Cliente</option>
+          </select>
+          <div class="text-danger" *ngIf="tipoUsuario.invalid && tipoUsuario.touched">
+            <small>Debe seleccionar un tipo de usuario.</small>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- Botón -->
+      <div class="row mt-4">
+        <div class="col-12 text-center">
+          <button
+            type="submit"
+            class="btn btn-success px-4"
+            [disabled]="formUsuario.invalid || correoDuplicado || celularDuplicado || fechaNacimientoInvalida"
+          >
+            <i class="bi bi-check-circle-fill me-1"></i> Actualizar Usuario
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

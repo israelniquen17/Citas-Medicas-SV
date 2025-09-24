@@ -1,0 +1,67 @@
+<div class="card my-4">
+  <div class="card-header text-center">
+    <h4>Administrar Sedes</h4>
+  </div>
+  <div class="card-body">
+
+    <!-- Mensajes -->
+    <div *ngIf="mensajeExito" class="alert alert-success text-center">{{ mensajeExito }}</div>
+    <div *ngIf="mensajeError" class="alert alert-danger text-center">{{ mensajeError }}</div>
+
+    <!-- Combo para registrar nueva sede -->
+    <div class="mb-4 text-center">
+      <label class="form-label me-2"><strong>Registrar nueva sede:</strong></label>
+      <select class="form-select d-inline-block w-auto" [(ngModel)]="seleccionada">
+        <option [ngValue]="''">-- Seleccione sede --</option>
+        <option *ngFor="let sede of sedesDisponibles" [ngValue]="sede">{{ sede }}</option>
+      </select>
+      <button class="btn btn-success ms-2" (click)="guardar()" [disabled]="!seleccionada">Guardar</button>
+    </div>
+
+    <!-- Filtro por estado -->
+    <div class="mb-3 text-center">
+      <label class="form-label me-2"><strong>Filtrar por estado:</strong></label>
+      <select class="form-select d-inline-block w-auto" [(ngModel)]="filtroEstado" (change)="aplicarFiltro()">
+        <option value="todas">Todas</option>
+        <option value="activos">Activas</option>
+        <option value="inactivos">Inactivas</option>
+      </select>
+    </div>
+
+    <!-- Tabla de sedes -->
+    <table class="table table-bordered table-hover mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sede of sedesFiltradas" [ngClass]="{ 'table-secondary': !sede.activo }">
+          <td>{{ sede.id }}</td>
+          <td>{{ sede.nombre }}</td>
+          <td>
+            <span [class]="'badge ' + (sede.activo ? 'bg-success' : 'bg-secondary')">
+              {{ sede.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>
+            <ng-container *ngIf="sede.activo; else inactivo">
+              <button type="button" class="btn btn-danger btn-sm" (click)="darDeBaja(sede)">Dar de baja</button>
+
+            </ng-container>
+            <ng-template #inactivo>
+              <button class="btn btn-secondary btn-sm" (click)="darDeAlta(sede)">Dar de alta</button>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="sedesFiltradas.length === 0" class="alert alert-warning text-center">
+      No se encontraron sedes.
+    </div>
+  </div>
+</div>

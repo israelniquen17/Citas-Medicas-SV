@@ -1,0 +1,26 @@
+.contenedor-busqueda {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.titulo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.formulario-busqueda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.form-control,
+.form-select {
+  min-width: 200px;
+}
+
+.table {
+  margin-top: 20px;
+}

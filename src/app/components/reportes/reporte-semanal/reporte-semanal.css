@@ -1,0 +1,112 @@
+.reporte-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.reporte-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.formulario-fechas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.campo {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+}
+
+.campo label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.campo input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-generar,
+.btn-pdf {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.btn-generar {
+  background-color: #2980b9;
+  color: #fff;
+}
+
+.btn-generar:hover {
+  background-color: #1c5980;
+}
+
+.btn-pdf {
+  background-color: #27ae60;
+  color: #fff;
+}
+
+.btn-pdf:hover {
+  background-color: #1f8a4d;
+}
+
+.tabla-reporte {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabla-reporte th,
+.tabla-reporte td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.tabla-reporte th {
+  background-color: #f2f2f2;
+}
+
+.sin-resultados {
+  margin-top: 20px;
+  color: #e74c3c;
+  text-align: center;
+  font-weight: bold;
+}
+
+.btn-limpiar {
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+.btn-limpiar:hover {
+  background-color: #ec971f;
+}

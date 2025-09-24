@@ -1,0 +1,106 @@
+<!-- NAVBAR estilizado -->
+<div class="navbar">
+  <div class="nav-links">
+    <strong>Módulos:</strong>
+    <button
+      class="nav-button"
+      [class.active]="currentView === 'usuarios'"
+      (click)="showUsuarios()"
+    >
+      Usuarios
+    </button>
+    <button
+      class="nav-button"
+      [class.active]="currentView === 'medicos'"
+      (click)="showMedicos()"
+    >
+      Médicos
+    </button>
+    <button
+      class="nav-button"
+      [class.active]="currentView === 'especialidad'"
+      (click)="showEspecialidad()"
+    >
+      Especialidad
+    </button>
+        <button
+      class="nav-button"
+      [class.active]="currentView === 'sedes'"
+      (click)="showSedes()"
+    >
+      Sedes
+    </button>
+    <button
+      class="nav-button"
+      [class.active]="currentView === 'sedes'"
+      (click)="showCitas()"
+    >
+      Citas
+    </button>
+    
+    <button
+      class="nav-button"
+      [class.active]="currentView === 'reportesemanal'"
+      (click)="showReporteSemanal()"
+    >
+     Generar Reportes
+    </button>
+
+        <button
+      class="nav-button"
+      [class.active]="currentView === 'reporteespecialidad'"
+      (click)="showReporteEspecialidad()"
+    >
+     Generar Reporte por Especialidad
+    </button>
+  </div>
+  <div class="logout-button">
+    <button (click)="cerrarSesion()">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="container">
+  <!-- VISTA USUARIOS -->
+  <ng-container *ngIf="currentView === 'usuarios'">
+    <app-tabla
+      [listaUsuarios]="listaUsuarios"
+      (eliminar)="eliminarUsuario($event)"
+    ></app-tabla>
+
+    <app-formulario-actualizar
+      *ngIf="usuarioEnEdicion"
+      [usuarioEditar]="usuarioEnEdicion"
+      (usuarioActualiza)="actualizarUsuario()"
+    ></app-formulario-actualizar>
+  </ng-container>
+
+  <!-- VISTA MÉDICOS -->
+  <ng-container *ngIf="currentView === 'medicos'">
+    <app-admin-medicos-component></app-admin-medicos-component>
+  </ng-container>
+</div>
+<!-- VISTA ESPECIALIDADES -->
+<ng-container *ngIf="currentView === 'especialidad'">
+  <app-admin-especialidades-component></app-admin-especialidades-component>
+</ng-container>
+
+<!-- VISTA SEDES -->
+<ng-container *ngIf="currentView === 'sedes'">
+  <app-admin-sedes-component></app-admin-sedes-component>
+</ng-container>
+
+<!-- VISTA CITAS -->
+
+<ng-container *ngIf="currentView === 'tablacitas'">
+<app-tabla-citas></app-tabla-citas>
+</ng-container>
+
+<ng-container *ngIf="currentView === 'reportesemanal'">
+<app-reporte-semanal></app-reporte-semanal>
+</ng-container>
+
+<ng-container *ngIf="currentView === 'reporteespecialidad'">
+<app-reporte-especialidad></app-reporte-especialidad>
+</ng-container>
+

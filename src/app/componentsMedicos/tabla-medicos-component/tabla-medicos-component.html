@@ -1,0 +1,104 @@
+  <div class="card my-4">
+    <div class="card-header text-center">
+      <h4>Lista de Médicos</h4>
+    </div>
+    <div class="card-body">
+
+      <!-- Filtro por estado (activo/inactivo) -->
+      <div class="mb-3 text-center">
+        <label class="form-label me-2"><strong>Filtrar por estado:</strong></label>
+        <select class="form-select d-inline-block w-auto" [(ngModel)]="filtroEstado" (change)="filtrarPorEstado()">
+          <option value="todos">Todos</option>
+          <option value="activos">Activos</option>
+          <option value="inactivos">Inactivos</option>
+        </select>
+      </div>
+
+
+
+      <!-- Filtro por DNI -->
+      <div *ngIf="mostrarBusquedaDni" class="mb-3">
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="Ingrese DNI"
+            [(ngModel)]="dniBuscar"
+            maxlength="8"
+            (keypress)="soloNumeros($event)"
+          />
+          <button class="btn btn-secondary" (click)="buscarPorDni()">Buscar</button>
+          <button class="btn btn-outline-secondary" (click)="restablecerLista()">Restablecer</button>
+        </div>
+        <div *ngIf="errorBusqueda" class="text-danger mt-2">
+          No se encontró ningún médico con ese DNI.
+        </div>
+      </div>
+
+      <!-- Filtro por Especialidad -->
+      <div *ngIf="mostrarBusquedaEspecialidad" class="mb-3">
+        <div class="input-group">
+          <select class="form-select" [(ngModel)]="especialidadBuscar">
+            <option [ngValue]="null">Seleccione especialidad</option>
+            <option *ngFor="let esp of especialidades" [ngValue]="esp">{{ esp }}</option>
+          </select>
+          <button class="btn btn-secondary" (click)="buscarPorEspecialidad()">Buscar</button>
+          <button class="btn btn-outline-secondary" (click)="restablecerLista()">Restablecer</button>
+        </div>
+        <div *ngIf="errorBusqueda" class="text-danger mt-2">
+          No se encontraron médicos con esa especialidad.
+        </div>
+      </div>
+
+      <!-- Tabla de médicos -->
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>DNI</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Correo</th>
+            <th>Especialidad</th>
+            <th>Celular</th>
+            <th>Sede</th>
+            <th>Estado</th>
+            <th>Horario</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of medicosMostrados" [ngClass]="{ 'table-secondary': !m.activo }">
+            <td>{{ m.dni }}</td>
+            <td>{{ m.nombres }}</td>
+            <td>{{ m.apellidos }}</td>
+            <td>{{ m.correoElectronico }}</td>
+            <td>{{ m.especialidad?.nombre || 'Sin especialidad' }}</td>
+            <td>{{ m.numeroCelular }}</td>
+            <td>{{ m.sede?.nombre || 'Sin sede' }}</td>
+            <td>
+              <span [class]="'badge ' + (m.activo ? 'bg-success' : 'bg-secondary')">
+                {{ m.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td>{{ m.horariosAtencion }}</td>
+            <td>
+              <button
+                class="btn btn-warning btn-sm me-1"
+                (click)="editar.emit(m)"
+                [disabled]="!m.activo"
+              >
+                Editar
+              </button>
+              <button
+    class="btn"
+    [ngClass]="m.activo ? 'btn-danger' : 'btn-success'"
+    (click)="cambiarEstado.emit(m)">
+    <i class="bi" [ngClass]="m.activo ? 'bi-person-dash' : 'bi-person-check'"></i>
+    {{ m.activo ? ' Dar de baja' : ' Dar de alta' }}
+  </button>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

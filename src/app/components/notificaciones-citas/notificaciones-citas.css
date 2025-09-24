@@ -1,0 +1,29 @@
+.campana-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.popup-notificaciones {
+  position: absolute;
+  right: 0;
+  top: 30px;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 250px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.popup-notificaciones ul {
+  padding-left: 15px;
+  margin: 0;
+}
+
+.popup-notificaciones li {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}

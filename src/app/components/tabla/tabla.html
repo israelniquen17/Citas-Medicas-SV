@@ -1,0 +1,116 @@
+<div class="card my-4">
+  <div class="card-header text-center">
+    <h4>Lista de Usuarios</h4>
+  </div>
+
+  <div class="card-body">
+    <!-- Filtro por estado (activo/inactivo) -->
+    <div class="mb-3 text-center">
+      <label class="form-label me-2"><strong>Filtrar por estado:</strong></label>
+      <select class="form-select d-inline-block w-auto" [(ngModel)]="filtroEstado" (change)="aplicarFiltroEstado()">
+        <option value="todos">Todos</option>
+        <option value="activos">Activos</option>
+        <option value="inactivos">Inactivos</option>
+      </select>
+    </div>
+
+    <!-- Buscadores -->
+    <div class="mb-3 text-center d-flex justify-content-center gap-3 flex-wrap">
+      <button class="btn btn-dark" (click)="mostrarBusqueda = !mostrarBusqueda">
+        Buscar por DNI
+      </button>
+      <button class="btn btn-dark" (click)="mostrarBusquedaTipo = !mostrarBusquedaTipo">
+        Buscar por Tipo de Usuario
+      </button>
+    </div>
+
+    <!-- Buscar por DNI -->
+    <div *ngIf="mostrarBusqueda" class="mb-3">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Ingrese DNI del usuario"
+          [(ngModel)]="dniBuscar"
+          maxlength="8"
+          (keypress)="soloNumeros($event)"
+        />
+        <button class="btn btn-secondary" (click)="buscarUsuarioPorId()">Buscar</button>
+        <button class="btn btn-outline-secondary" (click)="restablecerLista()">Restablecer</button>
+      </div>
+      <div *ngIf="errorBusqueda" class="text-danger mt-2">No se encontró ningún usuario con ese DNI.</div>
+    </div>
+
+    <!-- Buscar por Tipo -->
+    <div *ngIf="mostrarBusquedaTipo" class="mb-3">
+      <div class="input-group">
+        <select class="form-select" [(ngModel)]="tipoUsuarioBuscar">
+          <option value="">Seleccione tipo de usuario</option>
+          <option value="Cliente">Cliente</option>
+          <option value="Administrador">Administrador</option>
+        </select>
+        <button class="btn btn-secondary" (click)="buscarPorTipoUsuario()">Buscar</button>
+        <button class="btn btn-outline-secondary" (click)="restablecerLista()">Restablecer</button>
+      </div>
+      <div *ngIf="errorBusqueda" class="text-danger mt-2">No se encontraron usuarios con ese tipo.</div>
+    </div>
+
+    <!-- Formulario para editar -->
+    <app-formulario-actualizar
+      *ngIf="usuarioParaEditar"
+      [usuarioEditar]="usuarioParaEditar"
+      (usuarioActualiza)="onUsuarioActualizado($event)">
+    </app-formulario-actualizar>
+
+    <!-- Tabla de usuarios -->
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>DNI</th>
+          <th>Nombres</th>
+          <th>Apellidos</th>
+          <th>Email</th>
+          <th>Celular</th>
+          <th>Fecha Nac.</th>
+          <th>Sexo</th>
+          <th>Tipo Usuario</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of listaUsuariosFiltrados" [ngClass]="{ 'table-secondary': !item.activo }">
+          <td>{{ item.id }}</td>
+          <td>{{ item.dni }}</td>
+          <td>{{ item.nombres }}</td>
+          <td>{{ item.apellidos }}</td>
+          <td>{{ item.correoElectronico }}</td>
+          <td>{{ item.numeroCelular }}</td>
+          <td>{{ item.fechaNacimiento }}</td>
+          <td>{{ item.sexo }}</td>
+          <td>{{ item.tipoUsuario }}</td>
+          <td>
+            <span [class]="'badge ' + (item.activo ? 'bg-success' : 'bg-secondary')">
+              {{ item.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>
+            <ng-container *ngIf="item.activo; else inactivo">
+              <button class="btn btn-warning btn-sm me-1" (click)="editarUsuario(item)">Editar</button>
+              <button
+                *ngIf="item.tipoUsuario !== 'Administrador'"
+                class="btn btn-danger btn-sm"
+                (click)="darDeBajaUsuario(item)">
+                Dar de baja
+              </button>
+            </ng-container>
+            <ng-template #inactivo>
+              <span class="text-muted">Sin acciones</span>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
